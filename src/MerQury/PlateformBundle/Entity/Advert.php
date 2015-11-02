@@ -84,6 +84,13 @@ class Advert
  */
 private $updatedAt;
   
+function getUpdatedAt() {
+    return $this->updatedAt;
+}
+
+function setUpdatedAt($updatedAt) {
+    $this->updatedAt = $updatedAt;
+}
 
 /**
  * @ORM\PreUpdate
