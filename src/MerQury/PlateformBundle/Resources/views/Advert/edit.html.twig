@@ -1,0 +1,19 @@
+{# empty Twig template #}
+{% extends "MerQuryPlateformBundle::layout.html.twig" %}
+{% block title %}
+  Modifier une annonce - {{ parent() }}
+{% endblock %}
+{% block merqury_plateform_body %}
+  <h2>Modifier une annonce</h2>
+  {{ include("MerQuryPlateformBundle:Advert:form.html.twig") }}
+  <p>
+    Vous éditez une annonce déjà existante, merci de ne pas changer
+    l'esprit générale de l'annonce déjà publiée.
+  </p>
+  <p>
+    <a href="{{ path('mer_qury_plateform_view', {'id': advert.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour à l'annonce
+    </a>
+  </p>
+{% endblock %}

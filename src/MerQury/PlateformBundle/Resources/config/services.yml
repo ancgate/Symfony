@@ -1,0 +1,9 @@
+#services:
+#    mer_qury_plateform.example:
+#        class: MerQury\PlateformBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+services:
+    mer_qury_plateform.antispam:
+        class: MerQury\PlateformBundle\AntiSpam\MerQuryAntiSpam
+        arguments: [@mailer, %locale%, 50]

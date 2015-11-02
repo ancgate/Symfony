@@ -1,0 +1,40 @@
+mer_qury_plateform_home:
+    path:     /
+    defaults: { _controller: MerQuryPlateformBundle:Advert:index, page:1 }
+    requirements : 
+        page: \d*
+   
+mer_qury_plateform_view:
+    path:      /advert/{id}
+    defaults:  { _controller: MerQuryPlateformBundle:Advert:view }
+    requirements:
+        id: \d+
+
+mer_qury_plateform_add:
+    path:      /add
+    defaults:  { _controller: MerQuryPlateformBundle:Advert:add }
+    
+mer_qury_plateform_edit:
+    path:      /edit/{id}
+    defaults:  { _controller: MerQuryPlateformBundle:Advert:edit }
+    requirements:
+        id: \d+
+
+mer_qury_plateform_delete:
+    path:      /delete/{id}
+    defaults:  { _controller: MerQuryPlateformBundle:Advert:delete }
+    requirements:
+        id: \d+
+
+mer_qury_platform_view_slug:
+    path:      /{year}/{slug}.{format}
+    defaults:  { _controller: MerQuryPlateformBundle:Advert:viewSlug , format: html}
+    requirements:
+        year : \d{4}
+        format: html|xml
+
+byebye_the_world:
+    path:     /byebye-world
+    defaults: { _controller: MerQuryPlateformBundle:Divert:index }
+    
+

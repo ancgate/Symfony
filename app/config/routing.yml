@@ -1,0 +1,7 @@
+mer_qury_plateform:
+    resource: "@MerQuryPlateformBundle/Resources/config/routing.yml"
+    prefix:   /plateform
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
