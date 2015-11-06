@@ -14,10 +14,10 @@
   {% if advert.image is not null %}
   <img src="{{ advert.image.url }}" alt="{{ advert.image.alt }}">
 {% endif %}
-<h3>Applications</h3>
+<h3>Skills</h3>
 <ul>
-    {% for listApplication in listApplications %}
-        <li>{{ listApplication.author ~ listApplication.content|e }}</li>
+    {% for listAdvertSkill in listAdvertSkills %}
+        <li>{{ listAdvertSkill.level|e }}</li>
     {% endfor %}
 </ul>
 {% if not advert.categories.empty %}

@@ -1,91 +1,100 @@
 <?php
 
-// src/OC/PlatformBundle/Entity/AdvertSkill.php
-
+// src/MerQury/PlateformBundle/Entity/AdvertSkill.php
 
 namespace MerQury\PlateformBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
+
  * @ORM\Entity(repositoryClass="MerQury\PlateformBundle\Entity\AdvertSkillRepository")
+
  */
+class AdvertSkill {
 
-class AdvertSkill
-{
-  /**
-   * @ORM\Column(name="id", type="integer")
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="AUTO")
-   */
-  private $id;
+    /**
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="MerQury\PlateformBundle\Entity\Advert")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $advert;
 
-  /**
-   * @ORM\Column(name="level", type="string", length=255)
-   */
-  private $level;
+    /**
+     * @ORM\ManyToOne(targetEntity="MerQury\PlateformBundle\Entity\Skill")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $skill;
+    /**
+     * @ORM\Column(name="level", type="string", length=255)
+     */
+    private $level;
 
+    /**
+     * @return integer
+     */
+    public function getId() {
 
-  /**
-   * @ORM\ManyToOne(targetEntity="MerQury\PlateformBundle\Entity\Advert")
-   * @ORM\JoinColumn(nullable=false)
-   */
-  private $advert;
+        return $this->id;
+    }
 
+    /**
+     * @param Advert $advert
+     * @return AdvertSkill
+     */
+    public function setAdvert(Advert $advert) {
 
-  /**
-   * @ORM\ManyToOne(targetEntity="MerQury\PlateformBundle\Entity\Skill")
-   * @ORM\JoinColumn(nullable=false)
-   */
-  private $skill;
+        $this->advert = $advert;
+        return $this;
+    }
 
-  
+    /**
+     * @return Advert
+     */
+    public function getAdvert() {
 
-  public function getId()
+        return $this->advert;
+    }
 
-  {
-    return $this->id;
-  }
+    /**
+     * @param Skill $skill
+     * @return AdvertSkill
+     */
+    public function setSkill(Skill $skill) {
 
+        $this->skill = $skill;
+        return $this;
+    }
 
-  public function setLevel($level)
-  {
-    $this->level = $level;
-    return $this;
-  }
+    /**
+     * @return Skill
+     */
+    public function getSkill() {
 
-  public function getLevel()
-  {
-    return $this->level;
-  }
+        return $this->skill;
+    }
 
+    /**
+     * @param string $level
+     * @return AdvertSkill
+     */
+    public function setLevel($level) {
 
-  public function setAdvert(Advert $advert)
-  {
-    $this->advert = $advert;
-    return $this;
-  }
+        $this->level = $level;
+        return $this;
+    }
 
+    /**
+     * @return string
+     */
+    public function getLevel() {
 
-  public function getAdvert()
-  {
-    return $this->advert;
-  }
-
-
-  public function setSkill(Skill $skill)
-  {
-    $this->skill = $skill;
-    return $this;
-  }
-
-
-  public function getSkill()
-  {
-    return $this->skill;
-  }
+        return $this->level;
+    }
 
 }
-

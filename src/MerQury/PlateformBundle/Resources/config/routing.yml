@@ -1,6 +1,6 @@
 mer_qury_plateform_home:
     path:     /
-    defaults: { _controller: MerQuryPlateformBundle:Advert:index, page:1 }
+    defaults: { _controller: MerQuryPlateformBundle:Advert:index, page :1 }
     requirements : 
         page: \d*
    
