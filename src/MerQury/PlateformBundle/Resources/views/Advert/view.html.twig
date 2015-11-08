@@ -11,9 +11,10 @@
   <div class="well">
     {{ advert.content }}
   </div>
-  {% if advert.image is not null %}
-  <img src="{{ advert.image.url }}" alt="{{ advert.image.alt }}">
-{% endif %}
+<img 
+  src="{{ asset(advert.image.webPath) }}"
+  alt="{{ advert.image.alt }}"
+/>
 <h3>Skills</h3>
 <ul>
     {% for listAdvertSkill in listAdvertSkills %}

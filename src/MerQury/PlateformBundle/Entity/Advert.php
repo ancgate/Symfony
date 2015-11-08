@@ -7,9 +7,14 @@ namespace MerQury\PlateformBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use MerQury\PlateformBundle\Validator\Antiflood;
 
 /**
  * @ORM\Entity(repositoryClass="MerQury\PlateformBundle\Entity\AdvertRepository")
+ * @UniqueEntity(fields="title", message="Une annonce existe déjà avec ce titre.")
  * @ORM\HasLifecycleCallbacks()
  */
 class Advert {
@@ -23,26 +28,32 @@ class Advert {
 
     /**
      * @ORM\Column(name="date", type="datetime")
+     * @Assert\DateTime()
+     * @Assert\Length(min=10)
      */
     private $date;
 
     /**
      * @ORM\Column(name="title", type="string", length=255, unique=true)
+     * @Assert\Length(min=2)
      */
     private $title;
     
     /**
      * @ORM\Column(name="author", type="string", length=255)
+     * @Assert\NotBlank()
      */
-    
     private $author;
+    
+    
     /**
      * @ORM\Column(name="content", type="text")
      */
-    
     private $content;
     /**
      * @ORM\Column(name="published", type="boolean")
+     * @Antiflood()
+     * @Assert\Valid()
      */
     
     private $published = true;
@@ -53,7 +64,8 @@ class Advert {
     private $image;
 
     /**
-     * @ORM\ManyToMany(targetEntity="MerQury\PlateformBundle\Entity\Category", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="MerQury\PlateformBundle\Entity\Category", cascade={"persist", "remove"})
+     * @Assert\Valid()
      */
     private $categories;
     
@@ -63,16 +75,12 @@ class Advert {
     private $applications; // Notez le « s », une annonce est liée à plusieurs candidatures
 
     /**
-
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
-
      */
     private $updatedAt;
 
     /**
-
      * @ORM\Column(name="nb_applications", type="integer")
-
      */
     private $nbApplications = 0;
 
@@ -80,7 +88,6 @@ class Advert {
      * @Gedmo\Slug(fields={"title"})
      * @ORM\Column(length=128, unique=true)
      */
-    
     private $slug;
 
     public function __construct() {
@@ -288,5 +295,25 @@ class Advert {
 
         $this->nbApplications--;
     }
+    
+    /**
+   * @Assert\Callback
+   */
+
+  public function isContentValid(ExecutionContextInterface $context)
+
+  {
+    $forbiddenWords = array('échec', 'abandon');
+    // On vérifie que le contenu ne contient pas l'un des mots
+    if (preg_match('#'.implode('|', $forbiddenWords).'#', $this->getContent())) {
+      // La règle est violée, on définit l'erreur
+      $context
+        ->buildViolation('Contenu invalide car il contient un mot interdit.') // message
+        ->atPath('content')                                                   // attribut de l'objet qui est violé
+        ->addViolation() // ceci déclenche l'erreur, ne l'oubliez pas
+      ;
+    }
+  }
+    
 
 }

@@ -12,7 +12,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use MerQury\PlateformBundle\Entity\Advert;
-
+use MerQury\PlateformBundle\Form\AdvertType;
+use MerQury\PlateformBundle\Form\AdvertEditType;
 class AdvertController extends Controller {
 
     public function indexAction($page) {
@@ -80,10 +81,11 @@ class AdvertController extends Controller {
         // La gestion d'un formulaire est particulière, mais l'idée est la suivante :
         $advert = new Advert();
 
-         $form = $this->createForm(new AdvertType(), $advert);
+        $form = $this->createForm(new AdvertType(), $advert);
 
         if ($form->handleRequest($request)->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            //$advert->getImage()->upload();
             $em->persist($advert);
             $em->flush();
             $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
@@ -110,20 +112,25 @@ class AdvertController extends Controller {
 
     public function editAction($id, Request $request) {
 
-        // On récupère l'EntityManager
-
         $em = $this->getDoctrine()->getManager();
-        // On récupère l'entité correspondant à l'id $id
+
+        // On récupère l'annonce $id
         $advert = $em->getRepository('MerQuryPlateformBundle:Advert')->find($id);
-        // Si l'annonce n'existe pas, on affiche une erreur 404
 
-        if ($advert == null) {
-            throw $this->createNotFoundException("L'annonce d'id " . $id . " n'existe pas.");
+        if (null === $advert) {
+            throw new NotFoundHttpException("L'annonce d'id " . $id . " n'existe pas.");
         }
-        // Ici, on s'occupera de la création et de la gestion du formulaire
 
+        $form = $this->createForm(new AdvertEditType(), $advert);
+        if ($form->handleRequest($request)->isValid()) {
+            // Inutile de persister ici, Doctrine connait déjà notre annonce
+            $em->flush();
+            $request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');
+            return $this->redirect($this->generateUrl('mer_qury_plateform_view', array('id' => $advert->getId())));
+        }
         return $this->render('MerQuryPlateformBundle:Advert:edit.html.twig', array(
-                    'advert' => $advert
+                    'form' => $form->createView(),
+                    'advert' => $advert // Je passe également l'annonce à la vue si jamais elle veut l'afficher
         ));
     }
 
@@ -131,25 +138,30 @@ class AdvertController extends Controller {
         // On récupère l'EntityManager
 
         $em = $this->getDoctrine()->getManager();
-        // On récupère l'entité correspondant à l'id $id
+
+
+        // On récupère l'annonce $id
+
         $advert = $em->getRepository('MerQuryPlateformBundle:Advert')->find($id);
-        // Si l'annonce n'existe pas, on affiche une erreur 404
 
-        if ($advert == null) {
-            throw $this->createNotFoundException("L'annonce d'id " . $id . " n'existe pas.");
+
+        if (null === $advert) {
+
+            throw new NotFoundHttpException("L'annonce d'id " . $id . " n'existe pas.");
         }
-
-        if ($request->isMethod('POST')) {
-            // Si la requête est en POST, on deletea l'article
-            $request->getSession()->getFlashBag()->add('info', 'Annonce bien supprimée.');
-            // Puis on redirige vers l'accueil
-
-            return $this->redirect($this->generateUrl('mer_qury_plateform_home'));
+        // On crée un formulaire vide, qui ne contiendra que le champ CSRF
+        // Cela permet de protéger la suppression d'annonce contre cette faille
+        $form = $this->createFormBuilder()->getForm();
+        if ($form->handleRequest($request)->isValid()) {
+            $em->remove($advert);
+            $em->flush();
+            $request->getSession()->getFlashBag()->add('info', "L'annonce a bien été supprimée.");
+            return $this->redirect($this->generateUrl('mer_qury_platform_home'));
         }
-
-        // Si la requête est en GET, on affiche une page de confirmation avant de delete
+        // Si la requête est en GET, on affiche une page de confirmation avant de supprimer
         return $this->render('MerQuryPlateformBundle:Advert:delete.html.twig', array(
-                    'advert' => $advert
+                    'advert' => $advert,
+                    'form' => $form->createView()
         ));
     }
 

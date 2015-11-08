@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class ImageType extends AbstractType
+class CategoryType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -15,7 +15,7 @@ class ImageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-           ->add('file', 'file')
+            ->add('name')
         ;
     }
     
@@ -25,7 +25,7 @@ class ImageType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'MerQury\PlateformBundle\Entity\Image'
+            'data_class' => 'MerQury\PlateformBundle\Entity\Category'
         ));
     }
 
@@ -34,6 +34,6 @@ class ImageType extends AbstractType
      */
     public function getName()
     {
-        return 'merqury_plateformbundle_image';
+        return 'merqury_plateformbundle_category';
     }
 }

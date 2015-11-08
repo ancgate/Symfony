@@ -3,7 +3,7 @@
 namespace MerQury\PlateformBundle\DoctrineListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use OC\PlatformBundle\Entity\Application;
+use MerQury\PlateformBundle\Entity\Application;
 
 class ApplicationNotification {
 
